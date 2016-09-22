@@ -1,0 +1,8 @@
+---
+
+- name: reload nginx
+  service: name=nginx state=restarted
+
+- name: stop uwsgi
+  command: uwsgi --stop {{uwsgi_pid_file}}
+  ignore_errors: True

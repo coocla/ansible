@@ -1,7 +1,7 @@
 ---
 
-- name: test
+- name: deploy delay api server
   hosts: all
   gather_facts: False
   roles:
-  - test
+  - delayapi

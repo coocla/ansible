@@ -1,0 +1,41 @@
+---
+
+- name: install yum repo
+  yum: name=http://mirrors.sohu.com/fedora-epel/6/x86_64/epel-release-6-8.noarch.rpm state=present
+
+- name: install required packages
+  yum: name={{item}} state=present
+  with_items:
+  - nginx-GameWave
+  - python-devel
+  - python-pip
+
+- name: install required python module
+  pip: name={{item}} state=present
+  with_items:
+  - uwsgi
+  - flask
+
+- name: Create api directory
+  file: path={{uwsgi_deploy_dir}} state=directory
+
+- name: Deploy API Server and Uwsgi config file
+  template: src={{item}} dest={{uwsgi_deploy_dir}}/{{item}} owner=daemon group=daemon mode=644
+  with_items:
+  - delay_api.py
+  - uwsgi.ini
+  notify:
+  - stop uwsgi
+
+- name: Check uwsgi running status
+  stat: path=/tmp/delay.sock
+  register: uwsgi_status
+
+- name: Start uwsgi server
+  command: uwsgi --ini {{uwsgi_deploy_dir}}/uwsgi.ini
+  when: uwsgi_status.stat.exists == False
+
+- name: Configure and Reload Nginx 
+  template: src=delay.conf.j2 dest=/usr/local/nginx/conf/vhosts/delay.conf
+  notify:
+  - reload nginx

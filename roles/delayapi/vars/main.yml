@@ -1,0 +1,10 @@
+---
+
+api_listen: 999
+uwsgi_deploy_dir: /opt/delayapi
+uwsgi_sock_dir: /tmp/delay.sock
+uwsgi_pid_file: /var/run/delay.pid
+uwsgi_log_file: /tmp/delay.log
+
+allow_hosts:
+  - 8.8.8.8

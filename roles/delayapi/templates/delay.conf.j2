@@ -1,0 +1,19 @@
+upstream api-server {
+    server unix://{{uwsgi_sock_dir}};
+}
+
+server {
+    listen {{api_listen}};
+    server_name {{inventory_hostname}};
+    
+    location / {
+        {% if allow_hosts is defined -%}
+        {% for i in allow_hosts -%}
+        allow {{i}};
+        {% endfor -%}
+        deny all;
+        {% endif -%}
+        include uwsgi_params;
+        uwsgi_pass api-server;
+    }
+}
