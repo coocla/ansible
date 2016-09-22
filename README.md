@@ -6,14 +6,13 @@ My ansible playbooks. Store some daily practice
 
 # 逻辑语法
 
-1. only_if: 
+1. only_if : 
 ```
 - name: Test only_if
   command: w
   only_if: "'1' in $numbers"
 ```
-
-2. when:
+2. when :
 ```
 - get_url: url=http://deb.goaccess.io/gnugpg.key dest=/var/keys/goaccess_signing.key
   register: result
